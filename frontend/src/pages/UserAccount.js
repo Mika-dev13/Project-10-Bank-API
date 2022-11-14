@@ -1,14 +1,17 @@
 import React from 'react'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 function UserAccount({ title, amount, description }) {
-  // const { userToken } = useSelector((state) => state.user)
-  // if (!userToken) {
-  //   navigate('/login')
-  // }
-
-  // useEffect
-  // Dispatch de userInfo (GET Info User)
+  const navigate = useNavigate()
+  const { userToken } = useSelector((state) => state.user)
+  useEffect(() => {
+    if (!userToken) {
+      navigate('/user/login')
+    }
+  }, [userToken, navigate])
 
   return (
     <UserAccountSection>

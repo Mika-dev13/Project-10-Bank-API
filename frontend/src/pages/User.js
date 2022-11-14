@@ -2,6 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import UserAccount from './UserAccount'
+import EditForm from '../components/editForm'
 
 function User() {
   const { userInfo } = useSelector((state) => state.user)
@@ -13,6 +14,7 @@ function User() {
           <br />
           {userInfo.firstName} {userInfo.lastName} !
         </UserTitle>
+        <EditForm />
         <UserHeaderButton>Edit Name</UserHeaderButton>
       </UserHeader>
       <UserHiddenTitle>Accounts</UserHiddenTitle>
