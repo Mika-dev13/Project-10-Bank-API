@@ -70,6 +70,7 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
       produces:
         - application/json
       responses:
@@ -93,6 +94,7 @@ paths:
           name: Authorization
           description: Attach Bearer JWT token
           required: true
+          type: string
         - in: body
           name: body
           description: Update user profile attributes
@@ -110,6 +112,146 @@ paths:
           description: Invalid Fields
         '500':
           description: Internal Server Error
+  /user/transactions:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary:  access to the monthly transactions page
+      description: shows all the monthly transactions
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          description: Attach Bearer JWT token
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/monthlyTransactions'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error 
+  
+
+  /user/transaction/{transactionId}:
+    get:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary:  access to details of a transaction page
+      description: shows the details of a transaction
+      parameters:
+        - in: header
+          name: Authorization
+          type: string
+          description: Attach Bearer JWT token
+          required: true
+        - name: transactionId
+          required: true
+          type: integer
+          description: id of the transaction
+          in: path
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/transactionDetails'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+    post:
+      security:
+        - Bearer: []
+      tags:
+      - Transaction Module
+      summary: Add transaction comments
+      description: allows to add informations to a transaction
+      parameters:
+      - in: path
+        name: transactionId
+        required: true
+        type: integer
+        description: Attach transaction ID to URL
+      - in: body
+        name: body
+        description: Add transaction comments
+        required: true
+        schema:
+          $ref: '#/definitions/transactionComments'
+      produces: 
+        - application/json
+      responses:
+        '200':
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/transactionAdd'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+    put:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: Updape transactions comments
+      description: allows to update transaction details
+      parameters:
+        - in: path
+          name: transactionId
+          type: string
+          description: Attach transaction ID to URL
+          required: true
+        - in: body
+          name: body
+          description: Update user profile attributes
+          required: true
+          schema:
+            $ref: '#/definitions/transactionComments'
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transaction details updated successfully
+          schema:
+            $ref: '#/definitions/transactionAdd'
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+    delete:
+      security:
+        - Bearer: []
+      tags:
+        - Transaction Module
+      summary: delete transaction comments
+      description: allows to delete transaction details
+      parameters:
+        - in: path
+          name: transactionId
+          type: string
+          description: Attach transaction ID to URL
+          required: true
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: Transaction details deleted successfully
+        '400':
+          description: Invalid Fields
+        '500':
+          description: Internal Server Error
+
 securityDefinitions:
   Bearer:
     type: apiKey
@@ -164,3 +306,81 @@ definitions:
         type: string
       lastName:
         type: string
+  monthlyTransactions:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+        type: array
+        items:
+          type: object            
+          properties:
+            id:
+              type: string
+              description: unique id
+            date:
+              type: string
+              description: transaction date
+            description:
+              type: string
+              description: transaction description
+            amount:
+              type: number
+              description: transaction amount
+            balance:
+              type: number
+              description: balance amount  
+  transactionDetails:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body:
+          type: object            
+          properties:
+            id:
+              type: string
+              description: unique id
+            date:
+              type: string
+              description: transaction date
+            description:
+              type: string
+              description: transaction description
+            amount:
+              type: number
+              description: transaction amount
+            TransactionType:
+              type: string
+              description: mode of paiement 
+  transactionAdd:
+    type: object
+    properties:
+      status:
+        type: integer
+      message:
+        type: string
+      body: 
+        type: object
+        properties:
+            comments:
+              type: string
+            date-comment:
+              type: string
+  transactionComments:
+    type: object
+    properties:
+      body: 
+        type: object
+        properties:
+            comments:
+              type: string
+            date-comment:
+              type: string
+
+ 
