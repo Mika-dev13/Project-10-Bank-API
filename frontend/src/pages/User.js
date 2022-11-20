@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import UserAccount from './UserAccount'
@@ -6,16 +6,29 @@ import EditForm from '../components/editForm'
 
 function User() {
   const { userInfo } = useSelector((state) => state.user)
+
+  const [display, setDisplay] = useState(false)
+  const [mask, setMask] = useState(false)
+
+  const displayEditForm = () => {
+    setDisplay(true)
+    setMask(true)
+  }
+
   return (
     <UserMain>
       <UserHeader>
         <UserTitle>
           Welcome back
           <br />
-          {userInfo.firstName} {userInfo.lastName} !
+          {!display && `${userInfo.firstName} ${userInfo.lastName} !`}
         </UserTitle>
-        <EditForm />
-        <UserHeaderButton>Edit Name</UserHeaderButton>
+        {display && <EditForm />}
+        {!mask && (
+          <UserHeaderButton onClick={displayEditForm}>
+            Edit Name
+          </UserHeaderButton>
+        )}
       </UserHeader>
       <UserHiddenTitle>Accounts</UserHiddenTitle>
       <UserAccount

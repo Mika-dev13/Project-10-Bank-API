@@ -1,14 +1,24 @@
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
+import { updateUserName } from '../features/user/userActions'
 import styled from 'styled-components'
 
 function EditForm() {
   const { userInfo } = useSelector((state) => state.user)
   const { register, handleSubmit } = useForm()
+  const dispatch = useDispatch()
 
   const submitForm = (data) => {
     console.log(data)
+    dispatch(updateUserName(data))
+  }
+
+  const reset = () => {
+    const inputs = document.querySelectorAll('input')
+    for (let input of inputs) {
+      input.value = ''
+    }
   }
 
   return (
@@ -20,7 +30,9 @@ function EditForm() {
         </InputWrapper>
         <ButtonWrapper>
           <SaveButton type="submit">Save</SaveButton>
-          <CancelButton type="button">Cancel</CancelButton>
+          <CancelButton type="button" onClick={reset}>
+            Cancel
+          </CancelButton>
         </ButtonWrapper>
       </Form>
     </FormWrapper>
@@ -54,6 +66,10 @@ const ButtonWrapper = styled(InputWrapper)``
 const Input = styled.input`
   padding: 10px;
   outline: none;
+  font-weight: 700;
+  &::placeholder {
+    font-weight: 400;
+  }
 `
 const SaveButton = styled.button`
   border-color: #00bc77;

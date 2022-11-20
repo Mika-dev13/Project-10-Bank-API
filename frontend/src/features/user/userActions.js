@@ -53,7 +53,7 @@ export const getUserDetails = createAsyncThunk(
 
 export const updateUserName = createAsyncThunk(
   'user/updateUserName',
-  async ({ getState, rejectWithValue }) => {
+  async ({ firstName, lastName }, { getState, rejectWithValue }) => {
     try {
       const { user } = getState()
       const config = {
@@ -61,8 +61,19 @@ export const updateUserName = createAsyncThunk(
           Authorization: `Bearer ${user.userToken}`,
         },
       }
-      const { data } = await instance.put('/user/profile', {}, config)
+      const { data } = await instance.put(
+        '/user/profile',
+        { firstName, lastName },
+        config
+      )
+
       return data.body
-    } catch (error) {}
+    } catch (error) {
+      if (error.response && error.response.data.message) {
+        return rejectWithValue(error.response.data.message)
+      } else {
+        return rejectWithValue(error.message)
+      }
+    }
   }
 )
