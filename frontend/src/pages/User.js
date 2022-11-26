@@ -23,7 +23,7 @@ function User() {
           <br />
           {!display && `${userInfo.firstName} ${userInfo.lastName} !`}
         </UserTitle>
-        {display && <EditForm />}
+        {display && <EditForm setDisplay={setDisplay} setMask={setMask} />}
         {!mask && (
           <UserHeaderButton onClick={displayEditForm}>
             Edit Name

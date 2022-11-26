@@ -22,7 +22,6 @@ function SignInForm() {
 
   const submitForm = (data) => {
     dispatch(userLogin(data))
-    console.log(data)
   }
 
   return (

@@ -1,33 +1,55 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useForm } from 'react-hook-form'
+import { ErrorMessage } from '@hookform/error-message'
 import { updateUserName } from '../features/user/userActions'
 import styled from 'styled-components'
 
-function EditForm() {
+function EditForm({ setDisplay, setMask }) {
   const { userInfo } = useSelector((state) => state.user)
-  const { register, handleSubmit } = useForm()
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm()
   const dispatch = useDispatch()
 
   const submitForm = (data) => {
-    console.log(data)
     dispatch(updateUserName(data))
+    setDisplay(false)
+    setMask(false)
   }
 
   const reset = () => {
-    const inputs = document.querySelectorAll('input')
-    for (let input of inputs) {
-      input.value = ''
-    }
+    setDisplay(false)
+    setMask(false)
   }
 
   return (
     <FormWrapper>
       <Form onSubmit={handleSubmit(submitForm)}>
-        <InputWrapper>
-          <Input placeholder={userInfo.firstName} {...register('firstName')} />
-          <Input placeholder={userInfo.lastName} {...register('lastName')} />
-        </InputWrapper>
+        <InputsWrapper>
+          <InputWrapper>
+            <Input
+              placeholder={userInfo.firstName}
+              {...register('firstName', { required: 'This is required.' })}
+            />
+            <ErrorMess>
+              <ErrorMessage errors={errors} name="firstName" as="p" />
+            </ErrorMess>
+          </InputWrapper>
+          <InputWrapper>
+            <Input
+              placeholder={userInfo.lastName}
+              {...register('lastName', {
+                required: 'This is required.',
+              })}
+            />
+            <ErrorMess>
+              <ErrorMessage errors={errors} name="lastName" as="p" />
+            </ErrorMess>
+          </InputWrapper>
+        </InputsWrapper>
         <ButtonWrapper>
           <SaveButton type="submit">Save</SaveButton>
           <CancelButton type="button" onClick={reset}>
@@ -55,13 +77,17 @@ const Form = styled.form`
   gap: 1rem;
   margin: 30px 0;
 `
-const InputWrapper = styled.div`
+const InputsWrapper = styled.div`
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
   gap: 1rem;
 `
-const ButtonWrapper = styled(InputWrapper)``
+
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`
 
 const Input = styled.input`
   padding: 10px;
@@ -71,6 +97,13 @@ const Input = styled.input`
     font-weight: 400;
   }
 `
+const ErrorMess = styled.div`
+  color: red;
+  margin-top: 8px;
+  text-align: left;
+`
+const ButtonWrapper = styled(InputsWrapper)``
+
 const SaveButton = styled.button`
   border-color: #00bc77;
   background-color: #00bc77;
